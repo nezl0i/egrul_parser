@@ -38,7 +38,7 @@ def set_cookie(valid_inn):
 def write_valid(result_info: dict):
     with open(consumers_file, 'a', encoding='utf8', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';')
-        writer.writeheader()  # Заголовок csv файла. Для первого запуска скрипта, раскомментировать.
+        # writer.writeheader()  # Заголовок csv файла.
         writer.writerow(result_info)
 
 
@@ -50,13 +50,7 @@ with open(inn_file, encoding='utf8') as file:
 for inn in inn_list:
 
     inn = inn.strip()
-
-    try:
-        r1 = set_cookie(inn)
-    except KeyError:
-        sleep(5)
-        print('Sleeping 5 sec ...')
-        r1 = set_cookie(inn)
+    r1 = set_cookie(inn)
 
     try:
         rows = r1.json()['rows'][0]
