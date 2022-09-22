@@ -11,7 +11,7 @@ url_2 = 'https://egrul.nalog.ru/vyp-download/'  # URL для выгрузки pd
 
 inn_file = 'inn.txt'  # Файл со списком ИНН
 invalid_file = 'invalid.txt'  # Файл для не валидных ИНН
-consumers_file = 'consumers_2.csv'  # Файл с результатом парсинга
+consumers_file = 'consumers_4.csv'  # Файл с результатом парсинга
 
 fieldnames = ['Наименование', 'Адрес регистрации', 'ИНН', 'КПП',
               'ОГРН/ОГРНИП', 'Дата присвоения ОГРН', 'Директор']
@@ -30,8 +30,8 @@ def set_invalid(invalid_inn):
 
 # Основной запрос к сайту с установкой cookie (мы же честные ;) )
 def set_cookie(valid_inn):
-    r = s.post(url, data={'query': valid_inn}, cookies=s.cookies)
-    return s.get(url_1 + r.json()['t'], cookies=s.cookies)
+    r = s.post(url, data={'query': valid_inn}, cookies=s.cookies).json()
+    return s.get(url_1 + r.get('t'), cookies=s.cookies).json()
 
 
 # Запись в файл информации по валидным ИНН
@@ -53,7 +53,7 @@ for inn in inn_list:
     r1 = set_cookie(inn)
 
     try:
-        rows = r1.json()['rows'][0]
+        rows = r1['rows'][0]
         result = {
             fieldnames[0]: rows.get('n'),
             fieldnames[1]: rows.get('a'),
